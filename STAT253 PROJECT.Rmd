@@ -1,0 +1,11 @@
+---
+title: "253Project"
+author: "Jenny Li,Kristy Ma, Liz Cao"
+date: "2022/2/12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, error=TRUE, message=FALSE, warning=FALSE)
+```
+
