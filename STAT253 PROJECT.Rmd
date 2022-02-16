@@ -1,6 +1,6 @@
 ---
 title: "253Project"
-author: "Jenny Li,Kristy Ma, Liz Cao"
+author: "Jenny Li, Kristy Ma, Liz Cao"
 date: "2022/2/12"
 output: 
   html_document:
@@ -35,14 +35,14 @@ breastCa<-read_csv(file = "breast-cancer.csv")
 ```
 #data cleaning
 ```{r}
-breastCaRe<-breastCa %>% 
+breastCa_Re<-breastCa %>% 
   drop_na() %>% 
   select(area_mean,concavity_mean,radius_mean)
 ```
 
 ## Creation of cv folds
 ```{r}
-breastCaReCV<-vfold_cv(breastCaRe, v = 10)
+breastCa_Re_CV<-vfold_cv(breastCa_Re, v = 10)
 ```
 
 ## Model spec
@@ -64,11 +64,11 @@ lm_lasso_spec <-
 ## Recipes & workflows
 ```{r}
 #least square
-least_rec <- recipe(area_mean ~ ., data = breastCaRe) %>%
+least_rec <- recipe(area_mean ~ ., data = breastCa_Re) %>%
     step_corr(all_predictors()) %>% 
     step_nzv(all_predictors()) %>% # removes variables with the same value
     step_normalize(all_numeric_predictors()) %>% # important standardization step for LASSO
-    step_dummy(all_nominal_predictors()) # creates indicator variables for categorical variables
+    step_dummy(all_nominal_predictors())
 
 least_lm_wf <- workflow() %>%
     add_recipe(least_rec) %>%
@@ -76,14 +76,14 @@ least_lm_wf <- workflow() %>%
     
 #LASSO
 lasso_wf<- workflow() %>% 
-  add_recipe(full_rec) %>%
+  add_recipe(least_rec) %>%
   add_model(lm_lasso_spec) 
 ```
 
 ## Fit & tune models
 ```{r}
 #least square
-least_fit <- fit(least_lm_wf, data = breastCaRe) 
+least_fit <- fit(least_lm_wf, data = breastCa_Re) 
 
 least_fit %>% tidy()
 
@@ -95,7 +95,7 @@ penalty_grid <- grid_regular(
 
 tune_output <- tune_grid( # new function for tuning hyperparameters
   lasso_wf, # workflow
-  resamples = breastCaReCV, # cv folds
+  resamples = breastCa_Re_CV, # cv folds
   metrics = metric_set(rmse, mae),
   grid = penalty_grid # penalty grid defined above
 )
@@ -103,8 +103,30 @@ tune_output <- tune_grid( # new function for tuning hyperparameters
 #fit
 best_se_penalty <- select_by_one_std_err(tune_output, metric = 'mae', desc(penalty))
 final_wf_se <- finalize_workflow(lasso_wf, best_se_penalty)
-lasso_fit <- fit(final_wf_se , data = breastCaRe)
+lasso_fit <- fit(final_wf_se , data = breastCa_Re)
 lasso_fit %>% tidy()
 
+```
+
+#Part c
+## Calculate and collect CV metrics
+
+```{r}
+# Least Square model
+least_fit_cv <- fit_resamples(least_lm_wf,
+  resamples = breastCa_Re_CV, 
+  metrics = metric_set(rmse, rsq, mae)
+)
+
+least_fit_cv %>% collect_metrics(summarize = TRUE)
+```
+```{r}
+# LASSO model
+collect_metrics(tune_output) %>%
+  filter(.metric == 'rmse') %>% 
+  select(penalty, rmse = mean) 
+
+# Select best penalty value
+best_penalty <- select_best(tune_output, metric = 'rmse')
 ```
 
