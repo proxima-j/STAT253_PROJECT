@@ -54,7 +54,7 @@ lm_spec <-
     set_mode('regression')
 
 #LASSO
-lm_lasso_spec_tune <- 
+lm_lasso_spec <- 
   linear_reg() %>%
   set_args(mixture = 1, penalty = tune()) %>% ## mixture = 1 indicates Lasso
   set_engine(engine = 'glmnet') %>% #note we are using a different engine
@@ -64,39 +64,47 @@ lm_lasso_spec_tune <-
 ## Recipes & workflows
 ```{r}
 #least square
-full_rec <- recipe(area_mean ~ ., data = breastCaRe) %>%
+least_rec <- recipe(area_mean ~ ., data = breastCaRe) %>%
     step_corr(all_predictors()) %>% 
     step_nzv(all_predictors()) %>% # removes variables with the same value
     step_normalize(all_numeric_predictors()) %>% # important standardization step for LASSO
     step_dummy(all_nominal_predictors()) # creates indicator variables for categorical variables
 
-full_lm_wf <- workflow() %>%
-    add_recipe(full_rec) %>%
+least_lm_wf <- workflow() %>%
+    add_recipe(least_rec) %>%
     add_model(lm_spec)
     
 #LASSO
-lasso_wf_tune <- workflow() %>% 
+lasso_wf<- workflow() %>% 
   add_recipe(full_rec) %>%
-  add_model(lm_lasso_spec_tune) 
+  add_model(lm_lasso_spec) 
 ```
 
 ## Fit & tune models
 ```{r}
 #least square
-full_model <- fit(full_lm_wf, data = breastCaRe) 
+least_fit <- fit(least_lm_wf, data = breastCaRe) 
 
-full_model %>% tidy()
+least_fit %>% tidy()
 
 #LASSO
+#tune
 penalty_grid <- grid_regular(
   penalty(range = c(-3, 1)), #log10 transformed 
   levels = 30)
 
 tune_output <- tune_grid( # new function for tuning hyperparameters
-  lasso_wf_tune, # workflow
+  lasso_wf, # workflow
   resamples = breastCaReCV, # cv folds
   metrics = metric_set(rmse, mae),
   grid = penalty_grid # penalty grid defined above
 )
+
+#fit
+best_se_penalty <- select_by_one_std_err(tune_output, metric = 'mae', desc(penalty))
+final_wf_se <- finalize_workflow(lasso_wf, best_se_penalty)
+lasso_fit <- fit(final_wf_se , data = breastCaRe)
+lasso_fit %>% tidy()
+
 ```
 
