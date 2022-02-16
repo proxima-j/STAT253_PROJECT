@@ -2,14 +2,101 @@
 title: "253Project"
 author: "Jenny Li,Kristy Ma, Liz Cao"
 date: "2022/2/12"
-output: html_document
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    df_print: paged
+    code_download: true
+    theme: cerulean
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, error=TRUE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
 ```
 
+#Part a & b
+## Library statements 
+
 ```{r}
-# data cleaning
+library(dplyr)
+library(readr)
+library(broom)
+library(ggplot2)
+library(tidymodels) 
+tidymodels_prefer()
+theme_set(theme_bw())       
+Sys.setlocale("LC_TIME", "English")
+set.seed(74)
+```
+## Read in data
+```{r}
+breastCa<-read_csv(file = "breast-cancer.csv")
+```
+#data cleaning
+```{r}
+breastCaRe<-breastCa %>% 
+  drop_na() %>% 
+  select(area_mean,concavity_mean,radius_mean)
+```
+
+## Creation of cv folds
+```{r}
+breastCaReCV<-vfold_cv(breastCaRe, v = 10)
+```
+
+## Model spec
+```{r}
+#least square
+lm_spec <-
+    linear_reg() %>% 
+    set_engine(engine = 'lm') %>% 
+    set_mode('regression')
+
+#LASSO
+lm_lasso_spec_tune <- 
+  linear_reg() %>%
+  set_args(mixture = 1, penalty = tune()) %>% ## mixture = 1 indicates Lasso
+  set_engine(engine = 'glmnet') %>% #note we are using a different engine
+  set_mode('regression')
+```
+
+## Recipes & workflows
+```{r}
+#least square
+full_rec <- recipe(area_mean ~ ., data = breastCaRe) %>%
+    step_corr(all_predictors()) %>% 
+    step_nzv(all_predictors()) %>% # removes variables with the same value
+    step_normalize(all_numeric_predictors()) %>% # important standardization step for LASSO
+    step_dummy(all_nominal_predictors()) # creates indicator variables for categorical variables
+
+full_lm_wf <- workflow() %>%
+    add_recipe(full_rec) %>%
+    add_model(lm_spec)
+    
+#LASSO
+lasso_wf_tune <- workflow() %>% 
+  add_recipe(full_rec) %>%
+  add_model(lm_lasso_spec_tune) 
+```
+
+## Fit & tune models
+```{r}
+#least square
+full_model <- fit(full_lm_wf, data = breastCaRe) 
+
+full_model %>% tidy()
+
+#LASSO
+penalty_grid <- grid_regular(
+  penalty(range = c(-3, 1)), #log10 transformed 
+  levels = 30)
+
+tune_output <- tune_grid( # new function for tuning hyperparameters
+  lasso_wf_tune, # workflow
+  resamples = breastCaReCV, # cv folds
+  metrics = metric_set(rmse, mae),
+  grid = penalty_grid # penalty grid defined above
+)
 ```
 
