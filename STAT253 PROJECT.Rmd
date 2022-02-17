@@ -147,7 +147,7 @@ ggplot(least_fit_output, aes(x = .pred, y = resid)) +
 ggplot(least_fit_output, aes(x = concavity_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
-  labs(x = "concavitu mean", y = "residual") +
+  labs(x = "concavity mean", y = "residual") +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 
@@ -155,7 +155,7 @@ ggplot(least_fit_output, aes(x = concavity_mean, y = resid)) +
 ggplot(least_fit_output, aes(x = radius_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
-  labs(x = "radius_mean", y = "residual") +
+  labs(x = "radius mean", y = "residual") +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 
