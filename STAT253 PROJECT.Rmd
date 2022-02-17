@@ -115,19 +115,17 @@ lasso_fit %>% tidy()
 # Least Square model
 least_fit_cv <- fit_resamples(least_lm_wf,
   resamples = breastCa_Re_CV, 
-  metrics = metric_set(rmse, rsq, mae)
+  metrics = metric_set(rmse, mae)
 )
 
 least_fit_cv %>% collect_metrics(summarize = TRUE)
 ```
 ```{r}
 # LASSO model
-collect_metrics(tune_output) %>%
-  filter(.metric == 'rmse') %>% 
-  select(penalty, rmse = mean) 
-
-# Select best penalty value
-best_penalty <- select_best(tune_output, metric = 'rmse')
+tune_output %>% 
+  collect_metrics() %>% 
+  filter(penalty == (best_se_penalty 
+                     %>% pull(penalty)))
 ```
 #Part d
 ##Residual Plots 
