@@ -37,8 +37,7 @@ breastCa<-read_csv(file = "breast-cancer.csv")
 ```{r}
 breastCa_Re<-breastCa %>% 
   drop_na() %>% 
-  select(radius_mean:fractal_dimension_mean) %>% 
-  mutate(radius_square= (radius_mean)^2)
+  select(radius_mean:fractal_dimension_mean) 
 ```
 
 ## Creation of cv folds
@@ -153,14 +152,6 @@ ggplot(least_fit_output, aes(x = concavity_mean, y = resid)) +
   theme_classic()
 
 # Residuals vs. predictors (x's) 
-ggplot(least_fit_output, aes(x = radius_square, y = resid)) +
-  geom_point() +
-  geom_smooth() +
-  labs(x = "squared radius mean", y = "residual") +
-  geom_hline(yintercept = 0, color = "red") +
-  theme_classic()
-
-# Residuals vs. predictors (x's) 
 ggplot(least_fit_output, aes(x = compactness_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
@@ -173,6 +164,14 @@ ggplot(least_fit_output, aes(x = fractal_dimension_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
   labs(x = "fractal dimension mean", y = "residual") +
+  geom_hline(yintercept = 0, color = "red") +
+  theme_classic()
+
+# Residuals vs. predictors (x's) 
+ggplot(least_fit_output, aes(x = radius_mean*radius_mean, y = resid)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = "squared radius mean", y = "residual") +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 ```
