@@ -2,12 +2,14 @@
 title: "253Project"
 author: "Jenny Li, Kristy Ma, Liz Cao"
 date: "2022/2/12"
-output: 
+output:
+  pdf_document:
+    toc: yes
   html_document:
-    toc: TRUE
-    toc_float: TRUE
+    toc: yes
+    toc_float: yes
     df_print: paged
-    code_download: true
+    code_download: yes
     theme: cerulean
 ---
 
@@ -15,7 +17,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
 ```
 
-#Part a & b
+# Part a & b
 ## Library statements 
 
 ```{r}
@@ -33,7 +35,7 @@ set.seed(74)
 ```{r}
 breastCa<-read_csv(file = "breast-cancer.csv")
 ```
-#data cleaning
+## Data cleaning
 ```{r}
 breastCa_Re<-breastCa %>% 
   drop_na() %>% 
@@ -108,7 +110,7 @@ lasso_fit %>% tidy()
 
 ```
 
-#Part c
+# Part c
 ## Calculate and collect CV metrics
 
 ```{r}
@@ -127,8 +129,8 @@ tune_output %>%
   filter(penalty == (best_se_penalty 
                      %>% pull(penalty)))
 ```
-#Part d
-##Residual Plots 
+# Part d
+## Residual Plots 
 ```{r}
 
 least_fit_output <- least_fit %>%
@@ -223,22 +225,16 @@ ggplot(lasso_fit_output, aes(x = radius_mean*radius_mean, y = resid)) +
 ```
 
 
-2. Summarize investigations: Decide on an overall best model based on your investigations so far. To do this, make clear your analysis goals. Predictive accuracy? Interpretability? A combination of both?
+## 2. Summarize investigations: Decide on an overall best model based on your investigations so far. To do this, make clear your analysis goals. Predictive accuracy? Interpretability? A combination of both?
 
-Answer: 
-
-    Our goal is to have both accurate predictions and keep interpretability. Our proposed best model: area_mean~ radius_mean + compactness_mean + concavity_mean + fractal_dimension_mean. 
-    However, we are using the mean of radius to predict the area which does not really make sense in implementation, but for this assignment we will just leave it there. Also, this is coherent with the residual plot of radius which is a non-linear relationship.
+>Answer:  Our goal is to have both accurate predictions and keep interpretability. Our proposed best model: area_mean~ radius_mean + compactness_mean + concavity_mean + fractal_dimension_mean.( based on the p_value and the coefficents from LASSO. We prefer to keep all the variables that contain cofficients because the total of 4 variabls for a model is interpretable.) However, we are using the mean of radius to predict the area which does not really make sense in implementation, but for this assignment we will just leave it there. Also, this is coherent with the residual plot of radius which is a non-linear relationship.
 
 
 
-3. Societal impact: Are there any harms that may come from your analyses and/or how the data were collected? What cautions do you want to keep in mind when communicating your work?
+## 3. Societal impact: Are there any harms that may come from your analyses and/or how the data were collected? What cautions do you want to keep in mind when communicating your work?
 
 
-Answer: 
-
-    There are some harms that may occur, such as some patients may not be willing to provide their personal information or records for the case study.  
-    We need to protect the information safety of the patient. Also, we should know the number of observations may not be able to be generalized. 
+> Answer: There are some harms that may occur, such as some patients may not be willing to provide their personal information or records for the case study.  We need to protect the information safety of the patient. Also, we should know the number of observations may not be able to be generalized. 
 
 
 
