@@ -3,14 +3,14 @@ title: "253Project"
 author: "Jenny Li, Kristy Ma, Liz Cao"
 date: "2022/2/12"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     toc: yes
     toc_float: yes
     df_print: paged
     code_download: yes
     theme: cerulean
+  pdf_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
