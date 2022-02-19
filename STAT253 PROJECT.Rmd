@@ -223,11 +223,12 @@ ggplot(lasso_fit_output, aes(x = radius_mean*radius_mean, y = resid)) +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 ```
+
 # Part e
 >
-In the OLS, “radius_mean” is the most important predictor for our quantitative outcome since it has the lowest p.value. This shows the result is statistically significant and we have stronger evidence to reject the null hypothesis and instead claim a possible association between the mean area of tumor and the mean radius of the tumor. 
+In the OLS, “radius_mean” is the most important predictor for our quantitative outcome since it has the lowest p-value which is also much lower than the p-values of other variables. This shows the result is statistically significant and we have stronger evidence to reject the null hypothesis and instead claim a possible association between the mean area of tumor and the mean radius of the tumor. 
 
->In the LASSO, “radius_mean”, “compactness_mean”, “concavity_mean”, and “fractal_dimension_mean”, are the most important predictors of our quantitative outcome. The penalty shrinks the coefficients of three variables to zero due to their minimum effect on the response variable, and keeps important predictors in the model. 
+>In the LASSO, “radius_mean”, “compactness_mean”, “concavity_mean”, and “fractal_dimension_mean”, are the most important predictors of our quantitative outcome.(since the coefficents for other variables are zero) The penalty shrinks the coefficients of three variables to zero due to their minimum effect on the response variable, and keeps important predictors in the model. 
 
 >The methods we’ve applied did not reach the consensus on the most important variable. The strong association between the mean area of tumor and the mean radius of the tumor, indicated by the lowest p-value for “radius_mean” and its inclusion in the LASSO model, is expected by their definition.
 
