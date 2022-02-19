@@ -132,7 +132,7 @@ tune_output %>%
 # Part d
 ## Residual Plots 
 ```{r}
-
+#least square
 least_fit_output <- least_fit %>%
   predict(new_data = breastCa_Re) %>%
   bind_cols(breastCa_Re) %>%
@@ -149,7 +149,7 @@ ggplot(least_fit_output, aes(x = .pred, y = resid)) +
 ggplot(least_fit_output, aes(x = concavity_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
-  labs(x = "concavity mean", y = "residual") +
+  labs(x = "Concavity mean", y = "Residual") +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 
@@ -157,7 +157,7 @@ ggplot(least_fit_output, aes(x = concavity_mean, y = resid)) +
 ggplot(least_fit_output, aes(x = compactness_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
-  labs(x = "compactness mean", y = "residual") +
+  labs(x = "Compactness mean", y = "Residual") +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 
@@ -165,20 +165,21 @@ ggplot(least_fit_output, aes(x = compactness_mean, y = resid)) +
 ggplot(least_fit_output, aes(x = fractal_dimension_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
-  labs(x = "fractal dimension mean", y = "residual") +
+  labs(x = "Fractal dimension mean", y = "Residual") +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 
 # Residuals vs. predictors (x's) 
-ggplot(least_fit_output, aes(x = radius_mean*radius_mean, y = resid)) +
+ggplot(least_fit_output, aes(x = radius_mean, y = resid)) +
   geom_point() +
   geom_smooth() +
-  labs(x = "squared radius mean", y = "residual") +
+  labs(x = "Radius mean", y = "Residual") +
   geom_hline(yintercept = 0, color = "red") +
   theme_classic()
 ```
 
 ```{r}
+#LASSO
 lasso_fit_output <- lasso_fit %>%
   predict(new_data = breastCa_Re) %>%
   bind_cols(breastCa_Re) %>%
