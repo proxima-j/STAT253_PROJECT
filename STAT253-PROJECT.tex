@@ -1,0 +1,535 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={253Project},
+  pdfauthor={Jenny Li, Kristy Ma, Liz Cao},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{253Project}
+\author{Jenny Li, Kristy Ma, Liz Cao}
+\date{2022/2/12}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{part-a-b}{%
+\section{Part a \& b}\label{part-a-b}}
+
+\hypertarget{library-statements}{%
+\subsection{Library statements}\label{library-statements}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(readr)}
+\FunctionTok{library}\NormalTok{(broom)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(tidymodels) }
+\FunctionTok{tidymodels\_prefer}\NormalTok{()}
+\FunctionTok{theme\_set}\NormalTok{(}\FunctionTok{theme\_bw}\NormalTok{())       }
+\FunctionTok{Sys.setlocale}\NormalTok{(}\StringTok{"LC\_TIME"}\NormalTok{, }\StringTok{"English"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "English_United States.1252"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{74}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{read-in-data}{%
+\subsection{Read in data}\label{read-in-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{breastCa}\OtherTok{\textless{}{-}}\FunctionTok{read\_csv}\NormalTok{(}\AttributeTok{file =} \StringTok{"breast{-}cancer.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{data-cleaning}{%
+\subsection{Data cleaning}\label{data-cleaning}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{breastCa\_Re}\OtherTok{\textless{}{-}}\NormalTok{breastCa }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{drop\_na}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(radius\_mean}\SpecialCharTok{:}\NormalTok{fractal\_dimension\_mean) }
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{creation-of-cv-folds}{%
+\subsection{Creation of cv folds}\label{creation-of-cv-folds}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{breastCa\_Re\_CV}\OtherTok{\textless{}{-}}\FunctionTok{vfold\_cv}\NormalTok{(breastCa\_Re, }\AttributeTok{v =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{model-spec}{%
+\subsection{Model spec}\label{model-spec}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#least square}
+\NormalTok{lm\_spec }\OtherTok{\textless{}{-}}
+    \FunctionTok{linear\_reg}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{set\_engine}\NormalTok{(}\AttributeTok{engine =} \StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{set\_mode}\NormalTok{(}\StringTok{\textquotesingle{}regression\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\#LASSO}
+\NormalTok{lm\_lasso\_spec }\OtherTok{\textless{}{-}} 
+  \FunctionTok{linear\_reg}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{set\_args}\NormalTok{(}\AttributeTok{mixture =} \DecValTok{1}\NormalTok{, }\AttributeTok{penalty =} \FunctionTok{tune}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} \DocumentationTok{\#\# mixture = 1 indicates Lasso}
+  \FunctionTok{set\_engine}\NormalTok{(}\AttributeTok{engine =} \StringTok{\textquotesingle{}glmnet\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#note we are using a different engine}
+  \FunctionTok{set\_mode}\NormalTok{(}\StringTok{\textquotesingle{}regression\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{recipes-workflows}{%
+\subsection{Recipes \& workflows}\label{recipes-workflows}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#least square}
+\NormalTok{least\_rec }\OtherTok{\textless{}{-}} \FunctionTok{recipe}\NormalTok{(area\_mean }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ breastCa\_Re) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{step\_corr}\NormalTok{(}\FunctionTok{all\_predictors}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{step\_nzv}\NormalTok{(}\FunctionTok{all\_predictors}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# removes variables with the same value}
+    \FunctionTok{step\_normalize}\NormalTok{(}\FunctionTok{all\_numeric\_predictors}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# important standardization step for LASSO}
+    \FunctionTok{step\_dummy}\NormalTok{(}\FunctionTok{all\_nominal\_predictors}\NormalTok{())}
+
+\NormalTok{least\_lm\_wf }\OtherTok{\textless{}{-}} \FunctionTok{workflow}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{add\_recipe}\NormalTok{(least\_rec) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{add\_model}\NormalTok{(lm\_spec)}
+    
+\CommentTok{\#LASSO}
+\NormalTok{lasso\_wf}\OtherTok{\textless{}{-}} \FunctionTok{workflow}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{add\_recipe}\NormalTok{(least\_rec) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_model}\NormalTok{(lm\_lasso\_spec) }
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{fit-tune-models}{%
+\subsection{Fit \& tune models}\label{fit-tune-models}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#least square}
+\NormalTok{least\_fit }\OtherTok{\textless{}{-}} \FunctionTok{fit}\NormalTok{(least\_lm\_wf, }\AttributeTok{data =}\NormalTok{ breastCa\_Re) }
+
+\NormalTok{least\_fit }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{tidy}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 8 x 5
+##   term                   estimate std.error statistic   p.value
+##   <chr>                     <dbl>     <dbl>     <dbl>     <dbl>
+## 1 (Intercept)             655.         2.10   311.    0        
+## 2 radius_mean             369.         5.07    72.8   4.66e-288
+## 3 texture_mean              1.63       2.29     0.713 4.76e-  1
+## 4 smoothness_mean           0.746      3.11     0.239 8.11e-  1
+## 5 compactness_mean        -69.7        6.51   -10.7   1.82e- 24
+## 6 concavity_mean           37.5        5.54     6.76  3.56e- 11
+## 7 symmetry_mean             1.65       2.79     0.594 5.53e-  1
+## 8 fractal_dimension_mean   41.2        4.93     8.36  5.05e- 16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#LASSO}
+\CommentTok{\#tune}
+\NormalTok{penalty\_grid }\OtherTok{\textless{}{-}} \FunctionTok{grid\_regular}\NormalTok{(}
+  \FunctionTok{penalty}\NormalTok{(}\AttributeTok{range =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{)), }\CommentTok{\#log10 transformed }
+  \AttributeTok{levels =} \DecValTok{30}\NormalTok{)}
+
+\NormalTok{tune\_output }\OtherTok{\textless{}{-}} \FunctionTok{tune\_grid}\NormalTok{( }\CommentTok{\# new function for tuning hyperparameters}
+\NormalTok{  lasso\_wf, }\CommentTok{\# workflow}
+  \AttributeTok{resamples =}\NormalTok{ breastCa\_Re\_CV, }\CommentTok{\# cv folds}
+  \AttributeTok{metrics =} \FunctionTok{metric\_set}\NormalTok{(rmse, mae),}
+  \AttributeTok{grid =}\NormalTok{ penalty\_grid }\CommentTok{\# penalty grid defined above}
+\NormalTok{)}
+
+\CommentTok{\#fit}
+\NormalTok{best\_se\_penalty }\OtherTok{\textless{}{-}} \FunctionTok{select\_by\_one\_std\_err}\NormalTok{(tune\_output, }\AttributeTok{metric =} \StringTok{\textquotesingle{}mae\textquotesingle{}}\NormalTok{, }\FunctionTok{desc}\NormalTok{(penalty))}
+\NormalTok{final\_wf\_se }\OtherTok{\textless{}{-}} \FunctionTok{finalize\_workflow}\NormalTok{(lasso\_wf, best\_se\_penalty)}
+\NormalTok{lasso\_fit }\OtherTok{\textless{}{-}} \FunctionTok{fit}\NormalTok{(final\_wf\_se , }\AttributeTok{data =}\NormalTok{ breastCa\_Re)}
+\NormalTok{lasso\_fit }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{tidy}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 8 x 3
+##   term                   estimate penalty
+##   <chr>                     <dbl>   <dbl>
+## 1 (Intercept)               655.     2.04
+## 2 radius_mean               348.     2.04
+## 3 texture_mean                0      2.04
+## 4 smoothness_mean             0      2.04
+## 5 compactness_mean          -26.3    2.04
+## 6 concavity_mean             21.9    2.04
+## 7 symmetry_mean               0      2.04
+## 8 fractal_dimension_mean     14.4    2.04
+\end{verbatim}
+
+\hypertarget{part-c}{%
+\section{Part c}\label{part-c}}
+
+\hypertarget{calculate-and-collect-cv-metrics}{%
+\subsection{Calculate and collect CV
+metrics}\label{calculate-and-collect-cv-metrics}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Least Square model}
+\NormalTok{least\_fit\_cv }\OtherTok{\textless{}{-}} \FunctionTok{fit\_resamples}\NormalTok{(least\_lm\_wf,}
+  \AttributeTok{resamples =}\NormalTok{ breastCa\_Re\_CV, }
+  \AttributeTok{metrics =} \FunctionTok{metric\_set}\NormalTok{(rmse, mae)}
+\NormalTok{)}
+
+\NormalTok{least\_fit\_cv }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{collect\_metrics}\NormalTok{(}\AttributeTok{summarize =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 6
+##   .metric .estimator  mean     n std_err .config             
+##   <chr>   <chr>      <dbl> <int>   <dbl> <chr>               
+## 1 mae     standard    33.6    10    1.56 Preprocessor1_Model1
+## 2 rmse    standard    49.4    10    4.90 Preprocessor1_Model1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# LASSO model}
+\NormalTok{tune\_output }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{collect\_metrics}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(penalty }\SpecialCharTok{==}\NormalTok{ (best\_se\_penalty }
+                     \SpecialCharTok{\%\textgreater{}\%} \FunctionTok{pull}\NormalTok{(penalty)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 7
+##   penalty .metric .estimator  mean     n std_err .config              
+##     <dbl> <chr>   <chr>      <dbl> <int>   <dbl> <chr>                
+## 1    2.04 mae     standard    34.2    10    1.49 Preprocessor1_Model25
+## 2    2.04 rmse    standard    51.1    10    5.26 Preprocessor1_Model25
+\end{verbatim}
+
+\hypertarget{part-d}{%
+\section{Part d}\label{part-d}}
+
+\hypertarget{residual-plots}{%
+\subsection{Residual Plots}\label{residual-plots}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{least\_fit\_output }\OtherTok{\textless{}{-}}\NormalTok{ least\_fit }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(}\AttributeTok{new\_data =}\NormalTok{ breastCa\_Re) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(breastCa\_Re) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{resid =}\NormalTok{ area\_mean }\SpecialCharTok{{-}}\NormalTok{ .pred)}
+
+\FunctionTok{ggplot}\NormalTok{(least\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ .pred, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Fitted values"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Residuals"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(least\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ concavity\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"concavity mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-10-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(least\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ compactness\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"compactness mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-10-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(least\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ fractal\_dimension\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"fractal dimension mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-10-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(least\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ radius\_mean}\SpecialCharTok{*}\NormalTok{radius\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"squared radius mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-10-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lasso\_fit\_output }\OtherTok{\textless{}{-}}\NormalTok{ lasso\_fit }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(}\AttributeTok{new\_data =}\NormalTok{ breastCa\_Re) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(breastCa\_Re) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{resid =}\NormalTok{ area\_mean }\SpecialCharTok{{-}}\NormalTok{ .pred)}
+
+\FunctionTok{ggplot}\NormalTok{(lasso\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ .pred, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Fitted values"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Residuals"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(lasso\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ concavity\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"concavity mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-11-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(lasso\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ compactness\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"compactness mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-11-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(lasso\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ fractal\_dimension\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"fractal dimension mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-11-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Residuals vs. predictors (x\textquotesingle{}s) }
+\FunctionTok{ggplot}\NormalTok{(lasso\_fit\_output, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ radius\_mean}\SpecialCharTok{*}\NormalTok{radius\_mean, }\AttributeTok{y =}\NormalTok{ resid)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"squared radius mean"}\NormalTok{, }\AttributeTok{y =} \StringTok{"residual"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{STAT253-PROJECT_files/figure-latex/unnamed-chunk-11-5.pdf}
+\# Part e \textgreater{} In the OLS, ``radius\_mean'' is the most
+important predictor for our quantitative outcome since it has the lowest
+p.value. This shows the result is statistically significant and we have
+stronger evidence to reject the null hypothesis and instead claim a
+possible association between the mean area of tumor and the mean radius
+of the tumor.
+
+\begin{quote}
+In the LASSO, ``radius\_mean'', ``compactness\_mean'',
+``concavity\_mean'', and ``fractal\_dimension\_mean'', are the most
+important predictors of our quantitative outcome. The penalty shrinks
+the coefficients of three variables to zero due to their minimum effect
+on the response variable, and keeps important predictors in the model.
+\end{quote}
+
+\begin{quote}
+The methods we've applied did not reach the consensus on the most
+important variable. The strong association between the mean area of
+tumor and the mean radius of the tumor, indicated by the lowest p-value
+for ``radius\_mean'' and its inclusion in the LASSO model, is expected
+by their definition.
+\end{quote}
+
+\hypertarget{summarize-investigations-decide-on-an-overall-best-model-based-on-your-investigations-so-far.-to-do-this-make-clear-your-analysis-goals.-predictive-accuracy-interpretability-a-combination-of-both}{%
+\subsection{2. Summarize investigations: Decide on an overall best model
+based on your investigations so far. To do this, make clear your
+analysis goals. Predictive accuracy? Interpretability? A combination of
+both?}\label{summarize-investigations-decide-on-an-overall-best-model-based-on-your-investigations-so-far.-to-do-this-make-clear-your-analysis-goals.-predictive-accuracy-interpretability-a-combination-of-both}}
+
+\begin{quote}
+Answer: Our goal is to have both accurate predictions and keep
+interpretability. Our proposed best model: area\_mean\textasciitilde{}
+radius\_mean + compactness\_mean + concavity\_mean +
+fractal\_dimension\_mean.( based on the p\_value and the coefficents
+from LASSO. We prefer to keep all the variables that contain cofficients
+because the total of 4 variabls for a model is interpretable.) However,
+we are using the mean of radius to predict the area which does not
+really make sense in implementation, but for this assignment we will
+just leave it there. Also, this is coherent with the residual plot of
+radius which is a non-linear relationship.
+\end{quote}
+
+\hypertarget{societal-impact-are-there-any-harms-that-may-come-from-your-analyses-andor-how-the-data-were-collected-what-cautions-do-you-want-to-keep-in-mind-when-communicating-your-work}{%
+\subsection{3. Societal impact: Are there any harms that may come from
+your analyses and/or how the data were collected? What cautions do you
+want to keep in mind when communicating your
+work?}\label{societal-impact-are-there-any-harms-that-may-come-from-your-analyses-andor-how-the-data-were-collected-what-cautions-do-you-want-to-keep-in-mind-when-communicating-your-work}}
+
+\begin{quote}
+Answer: There are some harms that may occur, such as some patients may
+not be willing to provide their personal information or records for the
+case study. We need to protect the information safety of the patient.
+Also, we should know the number of observations may not be able to be
+generalized.
+\end{quote}
+
+\end{document}
