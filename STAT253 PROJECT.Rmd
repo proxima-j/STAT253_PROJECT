@@ -1,7 +1,7 @@
 ---
 title: "253Project"
 author: "Jenny Li, Kristy Ma, Liz Cao"
-date: "2022/2/12"
+date: "2022/3/24"
 output:
   html_document:
     toc: yes
@@ -40,6 +40,10 @@ breastCa<-read_csv(file = "breast-cancer.csv")
 breastCa_Re<-breastCa %>% 
   drop_na() %>% 
   select(radius_mean:fractal_dimension_mean) 
+
+breastCa_Re_new<-breastCa_Re%>%
+  mutate(concave_points_mean=`concave points_mean`)%>%
+  select(-8)
 ```
 
 ## Creation of cv folds
@@ -247,4 +251,34 @@ In the OLS, “radius_mean” is the most important predictor for our quantitati
 
 
 
+
+## Accounting for nonlinearity 
+
+```{r}
+set.seed(123)
+
+gam_spec <- 
+  gen_additive_mod() %>%
+  set_engine(engine = 'mgcv') %>%
+  set_mode('regression') 
+
+gam_mod <- fit(gam_spec,
+    area_mean ~ s(radius_mean)+texture_mean+s(perimeter_mean)+smoothness_mean+compactness_mean+concave_points_mean+concavity_mean+symmetry_mean+fractal_dimension_mean,
+    data = breastCa_Re_new
+)
+
+par(mfrow=c(2,2))
+gam_mod %>% pluck('fit') %>% mgcv::gam.check() 
+gam_mod %>% pluck('fit') %>% summary() 
+
+
+ns_rec <- least_rec %>%
+  step_ns(x, deg_free = 9)
+ns9_wf <- workflow()  %>%
+  add_recipe(ns_rec) %>%
+  add_model(lm_spec)
+
+gam_mod %>% pluck('fit') %>% plot()
+
+```
 
