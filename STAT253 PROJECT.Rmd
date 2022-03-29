@@ -282,3 +282,18 @@ gam_mod %>% pluck('fit') %>% plot()
 
 ```
 
+## Evaluation of the GAM model on Test Data 
+
+```{r}
+gam_test_output <- gam_mod %>%
+  predict(new_data=breastCa_Re_new) %>%
+  bind_cols(breastCa_Re_new %>% select(area_mean))
+
+gam_test_output %>%
+  rmse(truth=area_mean, estimate=.pred) 
+
+gam_test_output %>%
+  mae(truth=area_mean, estimate=.pred) 
+
+```
+
