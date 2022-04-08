@@ -9,3 +9,175 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
 ```
 
+```{r, library}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(tidymodels)
+library(probably)
+tidymodels_prefer()
+theme_set(theme_bw())       
+Sys.setlocale("LC_TIME", "English")
+set.seed(74)
+```
+
+```{r, reading data}
+breastCa<-read_csv(file = "breast-cancer.csv")
+```
+## Data Cleaning
+```{r}
+breastCa_Re<-breastCa %>% 
+  drop_na() %>% 
+  select(-c(13:22)) %>% 
+  select(-1)
+
+breastCa_Re_new<-breastCa_Re%>%
+  mutate(concave_points_mean=`concave points_mean`)%>%
+  select(-10)
+```
+
+## LASSO and Logistic Regression
+
+# Implete Lasso Logistic Regression in tidymodels
+```{r}
+
+# Make sure you set reference level (to the outcome you are NOT interested in)
+breastCa_Re_new2 <- breastCa_Re_new%>%
+  mutate(diagnosis = relevel(factor(diagnosis ), ref='B')) #set reference level
+
+data_cv10 <- vfold_cv(breastCa_Re_new2, v = 10)
+
+
+# Logistic LASSO Regression Model Spec
+logistic_lasso_spec_tune <- logistic_reg() %>%
+    set_engine('glmnet') %>%
+    set_args(mixture = 1, penalty = tune()) %>%
+    set_mode('classification')
+
+# Recipe
+logistic_rec <- recipe(diagnosis ~ ., data = breastCa_Re_new2) %>%
+    step_normalize(all_numeric_predictors()) %>% 
+    step_dummy(all_nominal_predictors())
+
+# Workflow (Recipe + Model)
+log_lasso_wf <- workflow() %>% 
+    add_recipe(logistic_rec) %>%
+    add_model(logistic_lasso_spec_tune) 
+
+# Tune Model (trying a variety of values of Lambda penalty)
+penalty_grid <- grid_regular(
+  penalty(range = c(-5, 1)), #log10 transformed  (kept moving min down from 0)
+  levels = 100)
+
+tune_output <- tune_grid( 
+  log_lasso_wf, # workflow
+  resamples = data_cv10, # cv folds
+  metrics = metric_set(roc_auc,accuracy),
+  control = control_resamples(save_pred = TRUE, event_level = 'second'),
+  grid = penalty_grid # penalty grid defined above
+)
+
+# Visualize Model Evaluation Metrics from Tuning
+autoplot(tune_output) + theme_classic()
+```
+# Inspecting the Model
+```{r}
+best_se_penalty <- select_by_one_std_err(tune_output, metric = 'roc_auc', desc(penalty)) # choose penalty value based on the largest penalty within 1 se of the highest CV roc_auc
+final_fit_se <- finalize_workflow(log_lasso_wf, best_se_penalty) %>% # incorporates penalty value to workflow 
+    fit(data = breastCa_Re_new2)
+
+final_fit_se %>% tidy()
+
+final_fit_se %>% tidy() %>%
+  filter(estimate == 0)
+
+#variable importance
+glmnet_output <- final_fit_se %>% extract_fit_engine()
+    
+# Create a boolean matrix (predictors x lambdas) of variable exclusion
+bool_predictor_exclude <- glmnet_output$beta==0
+
+# Loop over each variable
+var_imp <- sapply(seq_len(nrow(bool_predictor_exclude)), function(row) {
+    # Extract coefficient path (sorted from highest to lowest lambda)
+    this_coeff_path <- bool_predictor_exclude[row,]
+    # Compute and return the # of lambdas until this variable is out forever
+    ncol(bool_predictor_exclude) - which.min(this_coeff_path) + 1
+})
+
+# Create a dataset of this information and sort
+var_imp_data <- tibble(
+    var_name = rownames(bool_predictor_exclude),
+    var_imp = var_imp
+)
+var_imp_data %>% arrange(desc(var_imp))
+```
+
+#Evaluation Metrics
+```{r}
+# CV results for "best lambda"
+tune_output %>%
+    collect_metrics() %>%
+    filter(penalty == best_se_penalty %>% pull(penalty))
+
+# Count up number of B and M in the training data
+breastCa_Re_new2 %>%
+    count(diagnosis) # Name of the outcome variable goes inside count()
+
+#Compute the NIR
+NIR<- 357/(357+212)
+```
+
+#Threshold
+```{r}
+# Soft Predictions on Training Data
+final_output <-
+  final_fit_se %>% predict(new_data = breastCa_Re_new2, type = 'prob') %>%     bind_cols(breastCa_Re_new2)
+
+
+
+final_output %>%
+  ggplot(aes(x = diagnosis, y = .pred_M)) +
+  geom_boxplot()
+
+# Use soft predictions
+final_output %>%
+    roc_curve(diagnosis,.pred_M,event_level = 'second') %>%
+    autoplot()
+
+# thresholds in terms of reference level
+threshold_output <- final_output %>%
+    threshold_perf(truth = diagnosis, estimate = .pred_B, thresholds = seq(0,1,by=.01)) 
+
+# J-index v. threshold for not M
+threshold_output %>%
+    filter(.metric == 'j_index') %>%
+    ggplot(aes(x = .threshold, y = .estimate)) +
+    geom_line() +
+    labs(y = 'J-index', x = 'threshold') +
+    theme_classic()
+
+threshold_output %>%
+    filter(.metric == 'j_index') %>%
+    arrange(desc(.estimate))
+
+# Distance v. threshold for not M
+
+threshold_output %>%
+    filter(.metric == 'distance') %>%
+    ggplot(aes(x = .threshold, y = .estimate)) +
+    geom_line() +
+    labs(y = 'Distance', x = 'threshold') +
+    theme_classic()
+
+threshold_output %>%
+    filter(.metric == 'distance') %>%
+    arrange(.estimate)
+
+log_metrics <- metric_set(accuracy,sens,yardstick::spec)
+
+final_output %>%
+    mutate(.pred_class = make_two_class_pred(.pred_B, levels(diagnosis), threshold = .64)) %>%
+    log_metrics(truth = diagnosis, estimate = .pred_class, event_level = 'second')
+```
+
