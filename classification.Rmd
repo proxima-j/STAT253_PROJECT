@@ -15,6 +15,7 @@ library(readr)
 library(ggplot2)
 library(tidymodels)
 library(probably)
+library(vip)
 tidymodels_prefer()
 theme_set(theme_bw())       
 Sys.setlocale("LC_TIME", "English")
@@ -179,5 +180,137 @@ log_metrics <- metric_set(accuracy,sens,yardstick::spec)
 final_output %>%
     mutate(.pred_class = make_two_class_pred(.pred_B, levels(diagnosis), threshold = .64)) %>%
     log_metrics(truth = diagnosis, estimate = .pred_class, event_level = 'second')
+```
+
+
+## Random Forest
+
+# Building Random Forest
+```{r}
+# Model Specification
+rf_spec <- rand_forest() %>%
+  set_engine(engine = 'ranger') %>% 
+  set_args(mtry = NULL, # size of random subset of variables; default is floor(sqrt(ncol(x)))
+           trees = 1000, # Number of trees
+           min_n = 2,
+           probability = FALSE, # FALSE: hard predictions
+           importance = 'impurity') %>% 
+  set_mode('classification') # change this for regression tree
+
+# Recipe
+data_rec <- recipe(diagnosis ~ ., data = breastCa_Re_new2)
+
+# Workflows
+data_wf_mtry2 <- workflow() %>%
+  add_model(rf_spec %>% set_args(mtry = 2)) %>%
+  add_recipe(data_rec)
+
+# Create workflows for mtry = 4 , 10, and 20
+data_wf_mtry4 <- workflow() %>%
+  add_model(rf_spec %>% set_args(mtry = 4)) %>%
+  add_recipe(data_rec)
+
+data_wf_mtry10 <- workflow() %>%
+  add_model(rf_spec %>% set_args(mtry = 10)) %>%
+  add_recipe(data_rec)
+
+data_wf_mtry20 <- workflow() %>%
+  add_model(rf_spec %>% set_args(mtry = 20)) %>%
+  add_recipe(data_rec)
+```
+
+```{r}
+# Fit Models
+
+set.seed(123) # make sure to run this before each fit so that you have the same 1000 trees
+data_fit_mtry2 <- fit(data_wf_mtry2, data = breastCa_Re_new2)
+
+set.seed(123)
+data_fit_mtry4 <- fit(data_wf_mtry4, data = breastCa_Re_new2)
+
+set.seed(123) 
+data_fit_mtry10 <- fit(data_wf_mtry10, data = breastCa_Re_new2)
+
+set.seed(123)
+data_fit_mtry20 <- fit(data_wf_mtry20, data = breastCa_Re_new2)
+```
+
+```{r}
+# Custom Function to get OOB predictions, true observed outcomes and add a model label
+rf_OOB_output <- function(fit_model, model_label, truth){
+    tibble(
+          .pred_diagnosis = fit_model %>% extract_fit_engine() %>% pluck('predictions'), #OOB predictions
+          diagnosis = truth,
+          model = model_label
+      )
+}
+
+#check out the function output
+rf_OOB_output(data_fit_mtry2,'mtry2', breastCa_Re_new2 %>% pull(diagnosis))
+```
+
+
+```{r}
+# Evaluate OOB Metrics
+
+data_rf_OOB_output <- bind_rows(
+    rf_OOB_output(data_fit_mtry2,'mtry2', breastCa_Re_new2 %>% pull(diagnosis)),
+    rf_OOB_output(data_fit_mtry4,'mtry4', breastCa_Re_new2 %>% pull(diagnosis)),
+    rf_OOB_output(data_fit_mtry10,'mtry10', breastCa_Re_new2 %>% pull(diagnosis)),
+    rf_OOB_output(data_fit_mtry20,'mtry20', breastCa_Re_new2 %>% pull(diagnosis))
+)
+
+
+data_rf_OOB_output %>% 
+    group_by(model) %>%
+    accuracy(truth = diagnosis, estimate = .pred_diagnosis)
+```
+
+#Preliminary interpretation
+```{r}
+data_rf_OOB_output %>% 
+    group_by(model) %>%
+    accuracy(truth = diagnosis, estimate =.pred_diagnosis) %>%
+  mutate(mtry = as.numeric(stringr::str_replace(model,'mtry',''))) %>%
+  ggplot(aes(x = mtry, y = .estimate )) + 
+  geom_point() +
+  geom_line() +
+  theme_classic()
+```
+
+> Although mtry= 20 (all predictors) randomly sampled predictors at each split is overall baset with an overall accuracy of about 96.66%, consider of overfitting, we prefer the other two model which might not perform as well as mtry = 20 but better than mtry = 4 -- mtry = 2 and mtry = 10. In addtion, since larger tha number of randomly sampled predictors at each aplit we decide to include, the longer computational time for the forest, we decide to choose mtry=2 as our best tuning parameter.
+
+#Evaluating the forest
+```{r}
+data_fit_mtry2
+```
+
+
+```{r}
+rf_OOB_output(data_fit_mtry2,'mtry2', breastCa_Re_new2 %>% pull(diagnosis)) %>%
+    conf_mat(truth = diagnosis, estimate= .pred_diagnosis)
+```
+
+#Variable importance measures
+```{r}
+data_fit_mtry2 %>% 
+    extract_fit_engine() %>% 
+    vip(num_features = 30) + theme_classic()
+```
+
+```{r}
+ggplot(breastCa_Re_new2, aes(x = diagnosis, y = area_worst)) +
+    geom_violin() + theme_classic()
+```
+
+```{r}
+ggplot(breastCa_Re_new2, aes(x = diagnosis, y = fractal_dimension_mean)) +
+    geom_violin() + theme_classic()
+```
+
+```{r}
+#intermediate important
+ggplot(breastCa_Re_new2, aes(x = diagnosis, y = perimeter_mean)) +
+    geom_violin() + theme_classic()
 ```
 
