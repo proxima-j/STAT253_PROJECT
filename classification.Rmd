@@ -127,6 +127,7 @@ breastCa_Re_new2 %>%
 
 #Compute the NIR
 NIR<- 357/(357+212)
+NIR
 ```
 
 #Threshold
@@ -278,7 +279,7 @@ data_rf_OOB_output %>%
   theme_classic()
 ```
 
-> Although mtry= 20 (all predictors) randomly sampled predictors at each split is overall baset with an overall accuracy of about 96.66%, consider of overfitting, we prefer the other two model which might not perform as well as mtry = 20 but better than mtry = 4 -- mtry = 2 and mtry = 10. In addtion, since larger tha number of randomly sampled predictors at each aplit we decide to include, the longer computational time for the forest, we decide to choose mtry=2 as our best tuning parameter.
+> Although mtry= 20 (all predictors) randomly sampled predictors at each split is overall baset with an overall accuracy of about 96.66%, consider of overfitting, we prefer the other two model which might not perform as well as mtry = 20 but better than mtry = 4 -- mtry = 2 and mtry = 10. In addtion, since the larger number of randomly sampled predictors at each split we decide to include, the longer computational time for the forest, we decide to choose mtry=2 as our best tuning parameter.
 
 #Evaluating the forest
 ```{r}
@@ -289,6 +290,7 @@ data_fit_mtry2
 ```{r}
 rf_OOB_output(data_fit_mtry2,'mtry2', breastCa_Re_new2 %>% pull(diagnosis)) %>%
     conf_mat(truth = diagnosis, estimate= .pred_diagnosis)
+
 ```
 
 #Variable importance measures
