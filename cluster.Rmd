@@ -1,0 +1,150 @@
+---
+title: "cluster"
+author: "Jenny Li, Liz Cao, Kristy Ma"
+date: '2022-04-07'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
+```
+
+```{r, library}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(tidymodels)
+library(probably)
+library(vip)
+tidymodels_prefer()
+theme_set(theme_bw())       
+Sys.setlocale("LC_TIME", "English")
+set.seed(74)
+```
+
+```{r, reading data}
+breastCa<-read_csv(file = "breast-cancer.csv")
+```
+## Data Cleaning
+```{r}
+breastCa_Re<-breastCa %>% 
+  drop_na() %>% 
+  select(-c(13:22)) %>% 
+  select(-1)
+
+breastCa_Re_new<-breastCa_Re%>%
+  mutate(concave_points_mean=`concave points_mean`)%>%
+  select(-10) 
+```
+
+#Research goal
+>With the clustering method, we plan to inspect the data and have the a better understanding of the following questions: What similarities are there among the tumors ?
+Do there appear to be different kinds of tumors? If so, how many kinds are there ?
+
+# Visual explorations
+
+> For simplicity and visulizaiton purpose, we decided to first explore clustering based on the two most important variable on describing tumors:perimeter_mean and concave points_worst. These two chosen variable are mainly based on the variable importance measure from the classification method: perimeter_mean from LASSO with Logistic Regression and concave points_worst from random forest.
+
+```{r}
+ggplot(breastCa_Re_new, aes(x = perimeter_mean, y = `concave points_worst`)) +
+    geom_point() +
+    theme_classic()
+```
+
+#K-means clustering on perimeter_mean and concave points_worst
+
+>We decide to run k-means for k=2 clusters based on the common sense that there are two diagnoses for a tumor: Malignant or Benign. We would ajust and find the optimal number of K if the result with k=2 is not satified.
+
+```{r}
+# Select just the perimeter_mean and concave points_worst variables
+breastCa_Re_new_sub <- breastCa_Re_new %>%
+    select(perimeter_mean, `concave points_worst`)
+
+# Run k-means for k = centers = 2
+set.seed(253)
+kclust_k2 <- kmeans(breastCa_Re_new_sub, centers = 2)
+
+# Display the cluster assignments
+kclust_k2$cluster
+```
+```{r}
+# Add a variable (kclust_k2) to the original dataset 
+# containing the cluster assignments
+breastCa_Re_new <- breastCa_Re_new %>%
+    mutate(kclust_2 = factor(kclust_k2$cluster))
+```
+
+```{r}
+# Visualize the cluster assignments on the original scatterplot
+ggplot(breastCa_Re_new,
+       aes(x = perimeter_mean, y = `concave points_worst`, color = kclust_2)) +
+  geom_point() +
+  theme_classic()
+```
+#Addressing variable scale
+
+```{r}
+# Run k-means on the *scaled* data (all variables have SD = 1)
+set.seed(253)
+kclust_k2_scale <- kmeans(scale(breastCa_Re_new_sub), centers = 2)
+breastCa_Re_new <- breastCa_Re_new %>%
+    mutate(kclust_2_scale = factor(kclust_k2_scale$cluster))
+
+# Visualize the new cluster assignments
+ggplot(breastCa_Re_new,
+       aes(x = perimeter_mean, y = `concave points_worst`, color = kclust_2)) +
+  geom_point() +
+  theme_classic()
+```
+
+#Clustering on more variables
+```{r}
+# Select the variables to be used in clustering
+breastCa_Re_new_sub2 <- breastCa_Re_new %>%
+    select(c(2:21))
+
+# Look at summary statistics of the 3 variables
+summary(breastCa_Re_new_sub2)
+```
+
+```{r}
+set.seed(253)
+kclust_k2_allvars <- kmeans(scale(breastCa_Re_new_sub2), centers = 2)
+
+breastCa_Re_new <- breastCa_Re_new %>%
+    mutate(kclust_k2_allvars = factor(kclust_k2_allvars$cluster))
+
+
+breastCa_Re_new %>%
+  count(diagnosis,kclust_k2_allvars)
+```
+
+#Interpreting the clusters
+```{r}
+breastCa_Re_new %>%
+    group_by(kclust_k2_allvars) %>%
+    summarize(across(c(2:21), mean))
+```
+
+#Picking k
+```{r}
+# Data-specific function to cluster and calculate total within-cluster SS
+breastCa_Re_new_cluster_ss <- function(k){
+    # Perform clustering
+    kclust <- kmeans(scale(breastCa_Re_new_sub2), centers = k)
+
+    # Return the total within-cluster sum of squares
+    return(kclust$tot.withinss)
+}
+
+tibble(
+    k = 1:20,
+    tot_wc_ss = purrr::map_dbl(1:20, breastCa_Re_new_cluster_ss)
+) %>% 
+    ggplot(aes(x = k, y = tot_wc_ss)) +
+    geom_point() + 
+    geom_line()+
+    labs(x = "Number of clusters",y = 'Total within-cluster sum of squares') + 
+    theme_classic()
+```
+
