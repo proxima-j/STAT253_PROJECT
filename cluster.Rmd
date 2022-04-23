@@ -148,3 +148,44 @@ tibble(
     theme_classic()
 ```
 
+#Normalized variables clustering visualizaiton of optimal K
+```{r}
+# Run k-means for k = centers = 3
+set.seed(253)
+kclust_k3 <- kmeans(breastCa_Re_new_sub, centers = 3)
+
+# Display the cluster assignments
+kclust_k3$cluster
+
+# Run k-means on the *scaled* data (all variables have SD = 1)
+set.seed(253)
+kclust_k3_scale <- kmeans(scale(breastCa_Re_new_sub), centers = 3)
+breastCa_Re_new <- breastCa_Re_new %>%
+    mutate(kclust_3_scale = factor(kclust_k3_scale$cluster))
+
+# Visualize the new cluster assignments
+ggplot(breastCa_Re_new,
+       aes(x = perimeter_mean, y = `concave points_worst`, color =kclust_3_scale)) +
+  geom_point() +
+  theme_classic()
+```
+# Perform clustering on more variabels with K=3
+```{r}
+set.seed(253)
+kclust_k3_allvars <- kmeans(scale(breastCa_Re_new_sub2), centers = 3)
+
+breastCa_Re_new <- breastCa_Re_new %>%
+    mutate(kclust_k3_allvars = factor(kclust_k3_allvars$cluster))
+
+
+breastCa_Re_new %>%
+  count(diagnosis,kclust_k3_allvars)
+```
+
+#Interpreting the clusters with k=3
+```{r}
+breastCa_Re_new %>%
+    group_by(kclust_k3_allvars) %>%
+    summarize(across(c(2:21), mean))
+```
+
