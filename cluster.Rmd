@@ -16,6 +16,7 @@ library(ggplot2)
 library(tidymodels)
 library(probably)
 library(vip)
+library(plotly) 
 tidymodels_prefer()
 theme_set(theme_bw())       
 Sys.setlocale("LC_TIME", "English")
@@ -76,10 +77,19 @@ breastCa_Re_new <- breastCa_Re_new %>%
 
 ```{r}
 # Visualize the cluster assignments on the original scatterplot
-ggplot(breastCa_Re_new,
-       aes(x = perimeter_mean, y = `concave points_worst`, color = kclust_2)) +
+originalClusterPlot <- ggplot(
+  breastCa_Re_new,
+  aes(
+    x = perimeter_mean,
+    y = `concave points_worst`,
+    color = kclust_2,
+    text = paste('diagnosis: ', diagnosis)
+  )
+) +
   geom_point() +
   theme_classic()
+
+ggplotly(originalClusterPlot  , tooltip = c( "text"))
 ```
 #Addressing variable scale
 
@@ -91,10 +101,19 @@ breastCa_Re_new <- breastCa_Re_new %>%
     mutate(kclust_2_scale = factor(kclust_k2_scale$cluster))
 
 # Visualize the new cluster assignments
-ggplot(breastCa_Re_new,
-       aes(x = perimeter_mean, y = `concave points_worst`, color = kclust_2)) +
+scaledClusterPlot <- ggplot(
+  breastCa_Re_new,
+  aes(
+    x = perimeter_mean,
+    y = `concave points_worst`,
+    color = kclust_2,
+    text = paste('diagnosis: ', diagnosis)
+  )
+) +
   geom_point() +
   theme_classic()
+
+ggplotly(scaledClusterPlot  , tooltip = c( "text"))
 ```
 
 #Clustering on more variables
@@ -164,10 +183,19 @@ breastCa_Re_new <- breastCa_Re_new %>%
     mutate(kclust_3_scale = factor(kclust_k3_scale$cluster))
 
 # Visualize the new cluster assignments
-ggplot(breastCa_Re_new,
-       aes(x = perimeter_mean, y = `concave points_worst`, color =kclust_3_scale)) +
+newClusterKPlot <- ggplot(
+  breastCa_Re_new,
+  aes(
+    x = perimeter_mean,
+    y = `concave points_worst`,
+    color = kclust_3_scale,
+    text = paste('diagnosis: ', diagnosis)
+  )
+) +
   geom_point() +
   theme_classic()
+
+ggplotly(newClusterKPlot  , tooltip = c( "text"))
 ```
 # Perform clustering on more variabels with K=3
 ```{r}
