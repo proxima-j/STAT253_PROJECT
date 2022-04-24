@@ -16,7 +16,9 @@ library(ggplot2)
 library(tidymodels)
 library(probably)
 library(vip)
-library(plotly) 
+library(plotly)
+library(ClusterR)
+library(cluster)
 tidymodels_prefer()
 theme_set(theme_bw())       
 Sys.setlocale("LC_TIME", "English")
@@ -201,6 +203,8 @@ ggplotly(newClusterKPlot  , tooltip = c( "text"))
 ```{r}
 set.seed(253)
 kclust_k3_allvars <- kmeans(scale(breastCa_Re_new_sub2), centers = 3)
+#within clusters su of squares
+kclust_k3_allvars
 
 breastCa_Re_new <- breastCa_Re_new %>%
     mutate(kclust_k3_allvars = factor(kclust_k3_allvars$cluster))
@@ -216,4 +220,6 @@ breastCa_Re_new %>%
     group_by(kclust_k3_allvars) %>%
     summarize(across(c(2:21), mean))
 ```
+
+
 
