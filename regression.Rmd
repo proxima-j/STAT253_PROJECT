@@ -269,14 +269,15 @@ gam_mod <- fit(gam_spec,
 
 par(mfrow=c(2,2))
 gam_mod %>% pluck('fit') %>% mgcv::gam.check() 
-gam_mod %>% pluck('fit') %>% summary() 
-
+gam_mod %>% pluck('fit') %>% summary()
 
 ns_rec <- least_rec %>%
   step_ns(x, deg_free = 9)
 ns9_wf <- workflow()  %>%
   add_recipe(ns_rec) %>%
   add_model(lm_spec)
+
+hist(breastCa_Re_new$area_mean)
 
 gam_mod %>% pluck('fit') %>% plot()
 
