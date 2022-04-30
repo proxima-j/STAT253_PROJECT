@@ -42,7 +42,7 @@ set.seed(74)
 breastCa<-read_csv(file = "breast-cancer.csv")
 ```
 
-# Regression
+# Regression (Least Square & LASSO)
 
 ## Data cleaning
 ```{r}
