@@ -56,12 +56,14 @@ breastCa_Re_new<-breastCa_Re%>%
   select(-8)
 ```
 
-## Creation of cv folds
+## Least Square & LASSO
+
+### Creation of cv folds
 ```{r}
 breastCa_Re_CV<-vfold_cv(breastCa_Re, v = 10)
 ```
 
-## Model spec (Least Square & LASSO)
+### Model spec 
 ```{r}
 #least square
 lm_spec <-
@@ -77,7 +79,7 @@ lm_lasso_spec <-
   set_mode('regression')
 ```
 
-## Recipes & workflows (Least Square & LASSO)
+### Recipes & workflows 
 ```{r}
 #least square
 least_rec <- recipe(area_mean ~ ., data = breastCa_Re) %>%
@@ -96,7 +98,7 @@ lasso_wf<- workflow() %>%
   add_model(lm_lasso_spec) 
 ```
 
-## Fit & tune models (Least Square & LASSO)
+### Fit & tune models 
 ```{r}
 #least square
 least_fit <- fit(least_lm_wf, data = breastCa_Re) 
@@ -124,7 +126,7 @@ lasso_fit %>% tidy()
 
 ```
 
-## Calculate and collect CV metrics (Least Square & LASSO)
+### Calculate and collect CV metrics 
 
 ```{r}
 # Least Square model
@@ -143,7 +145,7 @@ tune_output %>%
                      %>% pull(penalty)))
 ```
 
-## Residual Plots (Least Square & LASSO)
+### Residual Plots 
 ```{r}
 #least square
 least_fit_output <- least_fit %>%
