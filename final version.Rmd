@@ -1,5 +1,5 @@
 ---
-title: "cluster"
+title: "Stat-253 Final Project"
 author: "Jenny Li, Liz Cao, Kristy Ma"
 date: '2022-04-07'
 output: 
